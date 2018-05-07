@@ -15,6 +15,7 @@ Jeremy recommended, but I was undisciplined and didn't.
  * Clone the [`eol_website`](https://github.com/EOL/eol_website) repository.
  * Jeremy gave me the following instructions, which I didn't follow exactly:
 
+```
     \# I don't think this worked for me.  I already had xcode installed
     \# and didn't have to do anything to make it work.
     sudo xcodebuild -license
@@ -38,6 +39,7 @@ Jeremy recommended, but I was undisciplined and didn't.
     \# This didn't work the first time - nokogiri failed.
     bundle
     rake db:reset
+```
 
  * To get `bundle` to complete without errors for `libxml` or `nokogiri`, 
    I had to check stackoverflow multiple times.  I'm sorry to say I'm
