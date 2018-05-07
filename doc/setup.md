@@ -15,27 +15,27 @@ Jeremy recommended, but I was undisciplined and didn't.
  * Clone the [`eol_website`](https://github.com/EOL/eol_website) repository.
  * Jeremy gave me the following instructions, which I didn't follow exactly:
 
-    # I don't think this worked for me.  I already had xcode installed
-    # and didn't have to do anything to make it work.
+    \# I don't think this worked for me.  I already had xcode installed
+    \# and didn't have to do anything to make it work.
     sudo xcodebuild -license
-    # Suppress documentation file creation - speeds things up
+    \# Suppress documentation file creation - speeds things up
     vim ~/.gemrc
     gem: --no-document
     brew update
     brew install rbenv
     brew install libksba bash-completion qt gcc openssl libyaml libffi readline
-    # I used the Ruby installed by homebrew, version 2.5.1p57, not 2.4.2
+    \# I used the Ruby installed by homebrew, version 2.5.1p57, not 2.4.2
     rbenv install 2.4.2
     rbenv global 2.4.2
     gem install bundler --pre
-    # Jeremy: IT IS BEST IF YOU KILL YOUR SHELL NOW AND RESTART ONE.
+    \# Jeremy: IT IS BEST IF YOU KILL YOUR SHELL NOW AND RESTART ONE.
     gem install rubocop
-    # I don't know why bundler is installed twice?
+    \# I don't know why bundler is installed twice?
     gem install bundler
-    # I don't think I did this command (or maybe it failed).  No matter.
+    \# I don't think I did this command (or maybe it failed).  No matter.
     xcode-select --install
     cd to the eol_website project directory (which you get from github)
-    # This didn't work the first time - nokogiri failed.
+    \# This didn't work the first time - nokogiri failed.
     bundle
     rake db:reset
 
@@ -65,7 +65,7 @@ Jeremy recommended, but I was undisciplined and didn't.
       * `rails s`
  * I don't know why this is needed but it is: (from Jeremy)
       * `rails r "ImportRun.delete_all"`
- * Get resources and terms:
+ * Get resources and terms from repository:
       * `rake sync`  (this takes about 15 minutes)
  * Change harvesting site resource ids to avoid conflicts with publishing site resource ids (at mysql prompt):
       * `update resources set id = id + 1000;`
