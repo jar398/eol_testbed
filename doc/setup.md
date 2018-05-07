@@ -69,7 +69,7 @@ Jeremy recommended, but I was undisciplined and didn't.
       * `rails r "TraitBank::Admin.setup"`
  * Start rails server
       * `rails s`
- * I don't know why this is needed but it is: (from Jeremy)
+ * I don't know why this is needed, but it is: (from Jeremy)
       * `rails r "ImportRun.delete_all"`
  * Get resources and terms from repository:
       * `rake sync`  (this takes about 15 minutes)
@@ -78,7 +78,13 @@ Jeremy recommended, but I was undisciplined and didn't.
  * Get production publishing site resources list.  I got this file from Jeremy, and I don't know how he made it.  Put the file at `pub-site-resources.json` in the main `testbed` directory (path is hardwired in upcoming `clobber_resource_ids.rb` script).
  * The following assumes `testbed` and `eol_website` clones are siblings in the file system.
  * Clobber resource ids to match beta publishing site: <br/>
-    `(cd ../eol_website; rails r ../testbed/clobber_resource_ids.rb)`
+      * `(cd ../eol_website; rails r ../testbed/clobber_resource_ids.rb)`
+ * Load the dynamic taxonomic hierarchy: <br/>
+      * `rake publish ID=1`
+ * Load traits resources as desired.  Resource ids are same as on publishing site.
+   Warning: Some of the resources listed in other places are not be available via this route.
+   This gets resource `sal_et_al_2013`: <br />
+      * `rake publish ID=455`
 
 Example of command line access to neo4j:
 
@@ -88,10 +94,15 @@ Example of command line access to neo4j:
          -d '{"statements" : [ {"statement" : "call dbms.showCurrentUser()"} ]}' \
          http://localhost:7474/db/data/transaction/commit
 
+You can also play with neo4j using [the
+console](http://localhost:7474/) or the `cypher-shell` command.
+
 Learned the hard way: When starting and stopping neo4j, do *not* mix
 use of `brew services start neo4j` (or `brew services stop neo4j`, etc) with use of
 the `neo4j` shell command e.g. `neo4j start`.  They do not play nicely
 together.
 
-I have a nagging feeling that I may have had to do something to switch
-over from gcc to clang, but don't remember for sure.
+I have a nagging feeling that while trying to get nokogiri to install
+I may have had to do something to configure xcode (or the gcc command)
+to use clang instead of gcc, but don't remember for sure.  I certainly
+didn't _want_ to do this, so perhaps I managed to avoid it.
