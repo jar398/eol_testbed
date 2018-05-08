@@ -1,4 +1,4 @@
-# 'Publishing' server setup instructions
+# Web application server and databases setup instructions
 
 Here are notes on the setup procedure that I used on a MacBook Pro
 running MacOS 10.12.5.  It is similar to what's in
@@ -14,6 +14,8 @@ installation.
 
 I probably should have set up a VM (`rvm` ?) and/or an `rbenv`, as
 Jeremy recommended, but I was undisciplined and didn't.
+
+Sorry this is such a mess.
 
  * Clone the [`eol_website`](https://github.com/EOL/eol_website) repository.
  * Jeremy gave me the following instructions, which I didn't follow exactly:
@@ -32,24 +34,24 @@ Jeremy recommended, but I was undisciplined and didn't.
     rbenv install 2.4.2
     rbenv global 2.4.2
     gem install bundler --pre
-    # Jeremy: IT IS BEST IF YOU KILL YOUR SHELL NOW AND RESTART ONE.
+    # Jeremy says: IT IS BEST IF YOU KILL YOUR SHELL NOW AND RESTART ONE.
     gem install rubocop
-    # I don't know why bundler is installed twice?
+    # I don't know why there are two 'gem install's for bundler?
     gem install bundler
     # I don't think I did this command (or maybe it failed).  No matter.
     xcode-select --install
-    cd to the eol_website project directory (which you get from github)
-    # This didn't work the first time - nokogiri failed.
+    cd to the eol_website project directory
+    # This didn't work for me the first time - nokogiri failed.
     bundle
     rake db:reset
 ```
 
  * To get `bundle` to complete without errors for `libxml` or `nokogiri`, 
-   I had to check stackoverflow multiple times.  I'm sorry to say I'm
+   I had to consult stackoverflow multiple times.  I'm sorry to say I'm
    not sure exactly what fixed the problem, but my notes end with a reference
-   to [this stackoverflow question](https://stackoverflow.com/questions/39937394/gem-install-nokogiri-v-1-6-8-1-fails) and this command:<br />
-    `  bundle config build.nokogiri --use-system-libraries --with-xml2-include=/usr/local/opt/libxml2/include/libxml2`
- * Tweak secrets.yml:
+   to [this stackoverflow question](https://stackoverflow.com/questions/39937394/gem-install-nokogiri-v-1-6-8-1-fails) and this command:
+      * `bundle config build.nokogiri --use-system-libraries --with-xml2-include=/usr/local/opt/libxml2/include/libxml2`
+ * Tweak `secrets.yml`:
       * Change `3000` to `2999` (because we are not running the publishing server)
       * Change `url: 'http://localhost:3000'` to `url: 'http://beta-repo.eol.org'` (repository)
  * Install and start `mysql` if not already there.
@@ -79,14 +81,27 @@ Jeremy recommended, but I was undisciplined and didn't.
  * The following assumes `testbed` and `eol_website` clones are siblings in the file system.
  * Clobber resource ids to match beta publishing site: <br/>
       * `(cd ../eol_website; rails r ../testbed/clobber_resource_ids.rb)`
+ * [My notes say: `fetch relationships` will grab parent/child relationships from opendata.
+   but I don't think I did this.  Probably should.]
+ * [If you look at `/terms` you should see the terms list.]
  * Load the dynamic taxonomic hierarchy: <br/>
       * `rake publish ID=1`
  * Load traits resources as desired.  Resource ids are same as on publishing site.
    Warning: Some of the resources listed in other places are not be available via this route.
-   This gets resource `sal_et_al_2013`: <br />
+   E.g. the following gets resource `sal_et_al_2013`: <br />
       * `rake publish ID=455`
 
-Example of command line access to neo4j:
+I have a nagging feeling that while trying to get nokogiri to install
+I may have had to do something to configure xcode (or the gcc command)
+to use clang instead of gcc, but don't remember for sure.  I certainly
+didn't _want_ to do this, so perhaps I managed to avoid it.
+
+Learned the hard way: When starting and stopping neo4j, do *not* mix
+use of `brew services start neo4j` (or `brew services stop neo4j`, etc) with use of
+the `neo4j` shell command e.g. `neo4j start`.  They do not play nicely
+together.
+
+Example of command line access to neo4j's Cypher endpoint:
 
     curl --user neo4j:neo4j \
          -H "Content-type: application/json" \
@@ -95,14 +110,4 @@ Example of command line access to neo4j:
          http://localhost:7474/db/data/transaction/commit
 
 You can also play with neo4j using [the
-console](http://localhost:7474/) or the `cypher-shell` command.
-
-Learned the hard way: When starting and stopping neo4j, do *not* mix
-use of `brew services start neo4j` (or `brew services stop neo4j`, etc) with use of
-the `neo4j` shell command e.g. `neo4j start`.  They do not play nicely
-together.
-
-I have a nagging feeling that while trying to get nokogiri to install
-I may have had to do something to configure xcode (or the gcc command)
-to use clang instead of gcc, but don't remember for sure.  I certainly
-didn't _want_ to do this, so perhaps I managed to avoid it.
+web console](http://localhost:7474/) or the `cypher-shell` command.
