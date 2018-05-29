@@ -51,14 +51,12 @@ Sorry this is such a mess.
    not sure exactly what fixed the problem, but my notes end with a reference
    to [this stackoverflow question](https://stackoverflow.com/questions/39937394/gem-install-nokogiri-v-1-6-8-1-fails) and this command:
       * `bundle config build.nokogiri --use-system-libraries --with-xml2-include=/usr/local/opt/libxml2/include/libxml2`
- * Tweak `secrets.yml`:
-      * Change `3000` to `2999` (because we are not running the publishing server)
-      * Change `url: 'http://localhost:3000'` to `url: 'http://beta-repo.eol.org'` (repository)
+ * Tweak `config/secrets.yml`:
+      * Change `url: 'http://localhost:3001'` to `url: 'http://beta-repo.eol.org'` (repository)
  * Install and start `mysql` if not already there.
  * Install and start `neo4j` (I used `brew` - neo4j setup is very easy)
- * At shell: `export EOL_TRAITBANK_URL=http://neo4j:YOURNEWPASSWORD@localhost:7474`
+ * At shell: `export EOL_TRAITBANK_URL=http://neo4j:neo4j@localhost:7474` (the second 'neo4j' should be whatever you set the admin password to)
  * Install rails (see `rbenv install` above, or use `brew install` like I did)
- * Install and start mysql
  * Set up mysql `eol` user and database.  You'll need to know the `mysql`
    root user password (or else it has to be empty).
       1. `mysql -uroot`
@@ -66,23 +64,26 @@ Sorry this is such a mess.
       1. `create user 'eol'@'localhost' identified by 'eol';`
       1. `grant all privileges on eol_development.* to 'eol'@'localhost';`
       1. `flush privileges;`
- * Update `secrets.yml` to set database user to `eol` (and password, if you set one)
+ * Update `config/secrets.yml` to set database user to `eol` (and password, if you set one)
  * Initialize database (not sure what this does, seems to create indexes?)
       * `rails r "TraitBank::Admin.setup"`
- * Start rails server
-      * `rails s`
  * I don't know why this is needed, but it is: (from Jeremy)
       * `rails r "ImportRun.delete_all"`
- * Get resources and terms from repository:
+ * Get resources and terms from beta repository:
       * `rake sync`  (this takes about 15 minutes)
- * Change the resource ids that we got from the harvesting/repository site to avoid conflicts with publishing site resource ids (at mysql prompt):
-      * `update resources set id = id + 1000;`
  * Get production publishing site resources list.  I got this file from Jeremy, and I don't know how he made it.  Put the file at `pub-site-resources.json` in the main `testbed` directory (path is hardwired in upcoming `clobber_resource_ids.rb` script).
- * The following assumes `testbed` and `eol_website` clones are siblings in the file system.
+ * The following assumes the `testbed` and `eol_website` repository clones are siblings in the file system.
+ * Change the resource ids that we got from the harvesting/repository site to avoid conflicts with publishing site resource ids (at mysql prompt):
+      * `mysql -ueol eol_development`
+      * `update resources set id = id + 1000;`
  * Clobber resource ids to match beta publishing site: <br/>
       * `(cd ../eol_website; rails r ../testbed/clobber_resource_ids.rb)`
- * [My notes say: `fetch relationships` will grab parent/child relationships from opendata.
-   but I don't think I did this.  Probably should.]
+ * Start the rails server (on default port, 3000):
+      * `rails s &`
+ * Just for fun, visit resources list http://localhost:3000/resources.  You'll get the error "Migrations are pending. To resolve this issue, run: bin/rake db:migrate RAILS_ENV=development".
+      * Fix this as directed.  (just `rake` instead of `bin/rake`)
+ * Grab parent/child relationships from opendata:
+      * rake terms:fetch
  * [If you look at `/terms` you should see the terms list.]
  * Load the dynamic taxonomic hierarchy: <br/>
       * `rake publish ID=1`

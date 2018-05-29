@@ -5,7 +5,7 @@
 # so that it matches what's found in file pub-site-resources.json
 # (which is somehow extracted from the publishing server).
 
-file = File.read "../eol_testbed/pub-site-resources.json"
+file = File.read "../testbed/pub-site-resources.json"
 data = JSON.parse(file)
 
 count = 0
