@@ -1,5 +1,5 @@
 # Testbed
 JAR's place to play around with EOL v3
 
-* [doc/setup.md](ROR/neo4j/mysql setup instructions)
-* [doc/auth-auth.md](Authentication and authorization ideas)
+* [ROR/neo4j/mysql setup instructionsd](doc/setup.m)
+* [Authentication and authorization ideas](doc/auth-auth.md)
