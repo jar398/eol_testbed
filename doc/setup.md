@@ -12,8 +12,10 @@ I have not independently tested these instructions, so think of them
 more as notes that might help you if you need to do a similar
 installation.
 
-I probably should have set up a VM (`rvm` ?) and/or an `rbenv`, as
-Jeremy recommended, but I was undisciplined and didn't.
+I probably should have set up a VM (`rvm` ?), as
+Jeremy recommended, but the `rvm` installation procedure looked pretty
+awful and I couldn't convince myself to trust it.
+`rbenv` is installable with `brew`.
 
 Sorry this is such a mess.
 
@@ -72,10 +74,10 @@ Sorry this is such a mess.
  * Get resources and terms from beta repository:
       * `rake sync`  (this takes about 15 minutes)
  * Get production publishing site resources list.  I got this file from Jeremy, and I don't know how he made it.  Put the file at `pub-site-resources.json` in the main `testbed` directory (path is hardwired in upcoming `clobber_resource_ids.rb` script).
- * The following assumes the `testbed` and `eol_website` repository clones are siblings in the file system.
  * Change the resource ids that we got from the harvesting/repository site to avoid conflicts with publishing site resource ids (at mysql prompt):
       * `mysql -ueol eol_development`
       * `update resources set id = id + 1000;`
+ * The following assumes the `testbed` and `eol_website` repository clones are siblings in the file system.
  * Clobber resource ids to match beta publishing site: <br/>
       * `(cd ../eol_website; rails r ../testbed/clobber_resource_ids.rb)`
  * Start the rails server (on default port, 3000):
@@ -83,14 +85,14 @@ Sorry this is such a mess.
  * Just for fun, visit resources list http://localhost:3000/resources.  You'll get the error "Migrations are pending. To resolve this issue, run: bin/rake db:migrate RAILS_ENV=development".
       * Fix this as directed.  (just `rake` instead of `bin/rake`)
  * Grab parent/child relationships from opendata:
-      * rake terms:fetch
+      * `rake terms:fetch`
  * [If you look at `/terms` you should see the terms list.]
  * Load the dynamic taxonomic hierarchy: <br/>
       * `rake publish ID=1`
  * Load traits resources as desired.  Resource ids are same as on publishing site.
    Warning: Some of the resources listed in other places are not be available via this route.
-   E.g. the following gets resource `sal_et_al_2013`: <br />
-      * `rake publish ID=455`
+   E.g. the following gets resource `Arctic_Lichens` (about 2 hours to load traits): <br />
+      * `rake publish ID=24`
 
 I have a nagging feeling that while trying to get nokogiri to install
 I may have had to do something to configure xcode (or the gcc command)
