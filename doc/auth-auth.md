@@ -5,26 +5,26 @@ traits-related web services to which access would limited to read-only
 use by a limited set of users.  The purposes of the access controls
 are:
 
-    * delay general user reviews until we're ready for them, by preventing 
-      access by anyone who is not registered for access
-    * prevent modifications to the traits DB (either intentional or accidental),
-    * prevent denial of service attacks (either intentional or accidental).
+   * delay general user reviews until we're ready for them, by preventing 
+     access by anyone who is not registered for access
+   * prevent modifications to the traits DB (either intentional or accidental),
+   * prevent denial of service attacks (either intentional or accidental).
 
 To this end, there would be user logins.  We grant read access to all
 controlled services to anyone who has a login.
 
 The desired state is three levels of authorization:
 
-    1. No access except through the web app (the default)
-    2. Read access using a web API and/or Cypher
-    3. Any kind of access (administrator) but maybe not via the web API
+   1. No access except through the web app (the default)
+   2. Read access using a web API and/or Cypher
+   3. Any kind of access (administrator) but maybe not via the web API
 
 Architecturally, there are three choices for where we might institute
 such controls:
 
-    1. nginx (the web server)
-    1. rails (the web application)
-    1. neo4j (the traits database)
+   1. nginx (the web server)
+   1. rails (the web application)
+   1. neo4j (the traits database)
 
 In any of these scenarios, logins would be manually administered by
 EOL staff.  That includes adding accounts and resetting passwords.
